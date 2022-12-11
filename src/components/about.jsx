@@ -9,8 +9,8 @@ const About = () => {
         <div className="top-con">
           <h1 className="title" onClick={() => navigate("/")}>THEIRTOK</h1>
         </div>
-        <button className="btn" onClick={() => navigate("/about")}>
-          about
+        <button className="btn" onClick={() => navigate("/")}>
+        ← Back 
         </button>
       </div>
       <div className="about-desc-con">

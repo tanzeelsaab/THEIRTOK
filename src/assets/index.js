@@ -1,10 +1,11 @@
-export {default as LeftButton} from './leftBtn'
-export {default as RightButton} from './rightBtn'
-export {default as CleanTok} from './CleanTok.png'
-export {default as Loader} from './loader.gif'
-export {default as BeautyTok} from './BeautyTok.png'
-export {default as AnimalTok} from './CatTok.png'
-export {default as DareTok} from './DareTok.png'
-export {default as KidTok} from './KidTok.png'
-export {default as QuackTok} from './QuackTok.png'
-export {default as SadTok} from './SadTok.png'
+export { default as LeftButton } from "./leftBtn";
+export { default as RightButton } from "./rightBtn";
+export { default as CleanTok } from "./CleanTok.png";
+export { default as Loader } from "./loader.gif";
+export { default as BeautyTok } from "./BeautyTok.png";
+export { default as AnimalTok } from "./CatTok.png";
+export { default as DareTok } from "./DareTok.png";
+export { default as KidTok } from "./KidTok.png";
+export { default as QuackTok } from "./QuackTok.png";
+export { default as SadTok } from "./SadTok.png";
+export { default as FireIcon } from "./fire.png";

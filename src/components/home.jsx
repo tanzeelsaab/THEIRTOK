@@ -5,13 +5,13 @@ import { LeftButton, RightButton } from "../assets";
 import VideoColumn from "./videoColumn";
 
 const allCategories = [
-  "clean_tok",
-  "dare_tok",
-  "sad_tok",
-  "quack_tok",
-  "animal_tok",
-  "beauty_tok",
-  "kid_tok",
+  { title: "dare_tok", controversy: 3 },
+  { title: "sad_tok", controversy: 1 },
+  { title: "clean_tok", controversy: 0 },
+  { title: "quack_tok", controversy: 3 },
+  { title: "beauty_tok", controversy: 2 },
+  { title: "kids_tok", controversy: 1 },
+  { title: "animal_tok", controversy: 0 },
 ];
 
 const Home = () => {
@@ -20,10 +20,10 @@ const Home = () => {
 
   // initial toks to show
   const [categories, setCategories] = useState([
-    "dare_tok",
-    "sad_tok",
-    "clean_tok",
-    "quack_tok",
+    { title: "dare_tok", controversy: 3 },
+    { title: "sad_tok", controversy: 1 },
+    { title: "clean_tok", controversy: 0 },
+    { title: "quack_tok", controversy: 3 },
   ]);
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -46,7 +46,15 @@ const Home = () => {
           >
             <LeftButton />
           </button>
-          <h1 className="title">THEIRTOK</h1>
+          <div className="title">
+            THEIRTOK{" "}
+            <button
+              className="small-btn"
+              onClick={() => navigate("/about")}
+            >
+              i
+            </button>
+          </div>
           <button
             className="btn"
             onClick={() => currentStep < 3 && setCurrentStep(currentStep + 1)}
@@ -54,14 +62,22 @@ const Home = () => {
             <RightButton />
           </button>
         </div>
-        <button className="btn about-btn-hide" onClick={() => navigate("/about")}>
+        <button
+          className="btn about-btn-hide"
+          onClick={() => navigate("/about")}
+        >
           about
         </button>
       </div>
 
       <div className="main-container">
-        {categories.map((category) => (
-          <VideoColumn type={category} key={category} />
+        {categories.map(({ title, controversy }, i) => (
+          <VideoColumn
+            type={title}
+            key={title}
+            isLast={i + 1 === categories.length}
+            controversy={controversy}
+          />
         ))}
       </div>
     </div>
