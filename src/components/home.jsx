@@ -26,12 +26,14 @@ const Home = () => {
     { title: "quack_tok", controversy: 3 },
   ]);
   const [currentStep, setCurrentStep] = useState(0);
+  const [forward, setForward] = useState(true);
 
   useEffect(() => {
     // logic for carousel behaviour
     if (categories.length > 0) {
       const allCatCopy = [...allCategories];
-      setCategories([...allCatCopy.slice(currentStep, currentStep + 4)]);
+      const updatedArray = allCatCopy.slice(currentStep, forward ? currentStep + 4 : currentStep - 4)
+      setCategories([...updatedArray]);
     }
   }, [currentStep, categories.length]);
 
@@ -42,7 +44,10 @@ const Home = () => {
         <div className="top-con top-con-res">
           <button
             className="btn"
-            onClick={() => currentStep > 0 && setCurrentStep(currentStep - 1)}
+            onClick={() => {
+              setForward(false)
+              setCurrentStep(currentStep > 0 ? currentStep - 1 : allCategories.length)
+            }}
           >
             <LeftButton />
           </button>
@@ -57,7 +62,7 @@ const Home = () => {
           </div>
           <button
             className="btn"
-            onClick={() => currentStep < 3 && setCurrentStep(currentStep + 1)}
+            onClick={() => setCurrentStep(currentStep + 1)}
           >
             <RightButton />
           </button>

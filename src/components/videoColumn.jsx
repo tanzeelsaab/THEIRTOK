@@ -1,46 +1,30 @@
 import { useEffect, useState } from "react";
 // import { LeftButton, RightButton } from "../assets";
-import Airtable from "airtable";
-import { getDesc, getIcon, getTitle, shuffle } from "../utilities";
+import { fetchData, getDesc, getIcon, getTitle } from "../utilities";
 import { FireIcon, Loader } from "../assets";
+import { isEmpty } from "lodash";
 
 const VideoColumn = ({ type, controversy = 0, isLast }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    var base = new Airtable({ apiKey: "keynELsZmAFX3e52w" }).base(
-      "appQx41NONtobLemr"
-    );
+    fetchData(type, 4, setData, data);
+  }, []);
 
-    base(type)
-      .select({
-        // Selecting the first 3 records in Grid view:
-        maxRecords: 4,
-        view: "Grid view",
-      })
-      .eachPage(
-        function page(records, fetchNextPage) {
-          // This function (`page`) will get called for each page of records.
+  const handleFetchMore = (e) => {
+    const element = e.target;
+    let lastScrollTop = 0;
+    if (element.scrollTop < lastScrollTop) {
+      // upscroll
+      return;
+    }
+    lastScrollTop = element.scrollTop <= 0 ? 0 : element.scrollTop;
+    //logic to check if user reaches to the bottom of column then fetch next set of data
+    if (element.scrollTop + element.offsetHeight + 20 >= element.scrollHeight) {
+      fetchData(type, data.length + 4, setData, data);
+    }
+  };
 
-          setData([...shuffle(records)]);
-
-          // records.forEach(function(record) {
-          //     setData(record.fields)
-          // });
-
-          // To fetch the next page of records, call `fetchNextPage`.
-          // If there are more records, `page` will get called again.
-          // If there are no more records, `done` will get called.
-          fetchNextPage();
-        },
-        function done(err) {
-          if (err) {
-            console.error(err);
-            return;
-          }
-        }
-      );
-  }, [type]);
   return (
     <div
       className="column-main"
@@ -59,8 +43,8 @@ const VideoColumn = ({ type, controversy = 0, isLast }) => {
           <span className="tok-desc">{getDesc(type)}</span>
         </div>
       </div>
-      <div className="video-column">
-        {data.length > 0 &&
+      <div className="video-column" onScroll={handleFetchMore} id="scroll">
+        {!isEmpty(data) &&
           data.map(({ fields }, i) => {
             if (
               fields["video-data"] !== undefined &&
@@ -71,6 +55,7 @@ const VideoColumn = ({ type, controversy = 0, isLast }) => {
                   className="video-wrapper"
                   style={{ marginBottom: i + 1 === data.length && "190px" }}
                   key={fields.id}
+                  id="content"
                 >
                   <video
                     width={300}
@@ -99,7 +84,7 @@ const VideoColumn = ({ type, controversy = 0, isLast }) => {
                       target="_blank"
                       className="video-tags"
                       rel="noreferrer"
-                      onClick={() => alert('yay')}
+                      onClick={() => alert("yay")}
                     >
                       {fields["title"] !== undefined
                         ? fields["title"]
