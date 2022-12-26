@@ -4,14 +4,15 @@ import { fetchData, getDesc, getIcon, getTitle } from "../utilities";
 import { FireIcon, Loader } from "../assets";
 import { isEmpty } from "lodash";
 
-const VideoColumn = ({ type, controversy = 0, isLast }) => {
+const VideoColumn = ({ type, controversy = 0, isLast, singleRow }) => {
   const [data, setData] = useState([]);
+  const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
     fetchData(type, 4, setData, data);
   }, []);
 
-  const handleFetchMore = (e) => {
+  const handleFetchMore = (e) => {  
     const element = e.target;
     let lastScrollTop = 0;
     if (element.scrollTop < lastScrollTop) {
@@ -30,7 +31,11 @@ const VideoColumn = ({ type, controversy = 0, isLast }) => {
       className="column-main"
       style={{ borderRight: !isLast && "1px solid #e4e4e4" }}
     >
-      <div className="sub-con">
+      <div
+        className="sub-con"
+        onMouseOver={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
         <img height={99.6} width={99.6} src={getIcon(type)} alt="" />
         <div className="tok-details-con">
           <span className="tok-title">{getTitle(type)}</span>
@@ -40,7 +45,9 @@ const VideoColumn = ({ type, controversy = 0, isLast }) => {
               <img src={FireIcon} alt="" key={i} />
             ))}{" "}
           </span>
-          <span className="tok-desc">{getDesc(type)}</span>
+          <span className={`tok-desc ${hovered && "show-item"}`}>
+            {getDesc(type)}
+          </span>
         </div>
       </div>
       <div className="video-column" onScroll={handleFetchMore} id="scroll">
@@ -58,7 +65,7 @@ const VideoColumn = ({ type, controversy = 0, isLast }) => {
                   id="content"
                 >
                   <video
-                    width={300}
+                    width={singleRow ? 'auto' : 300}
                     poster={Loader}
                     controls
                     muted
@@ -70,7 +77,7 @@ const VideoColumn = ({ type, controversy = 0, isLast }) => {
                       type="video/mp4"
                     />
                   </video>
-                  <div className="vid-text">
+                  <div className="vid-text" onClick={() => alert("yay")}>
                     <div className="video-title">
                       ↗{" "}
                       <span className="video-title">
@@ -84,7 +91,6 @@ const VideoColumn = ({ type, controversy = 0, isLast }) => {
                       target="_blank"
                       className="video-tags"
                       rel="noreferrer"
-                      onClick={() => alert("yay")}
                     >
                       {fields["title"] !== undefined
                         ? fields["title"]

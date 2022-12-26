@@ -9,7 +9,7 @@ const About = () => {
         <div className="top-con">
           <h1 className="title" onClick={() => navigate("/")}>THEIRTOK</h1>
         </div>
-        <button className="btn" onClick={() => navigate("/")}>
+        <button className="btn right-margin" onClick={() => navigate("/")}>
         ← Back 
         </button>
       </div>
