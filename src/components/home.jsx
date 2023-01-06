@@ -34,7 +34,7 @@ const Home = () => {
 
   const handleRightArrow = () => {
     setCurrentStep(currentStep + 1);
-    if (currentStep > allCategories.length - 4) {
+    if (currentStep > allCategories.length - 5) {
       setCurrentStep(0);
     }
     setCategories([
@@ -48,7 +48,7 @@ const Home = () => {
   const handleLeftArrow = () => {
     setCurrentStep(currentStep - 1);
     if (currentStep < 0) {
-      currentStep(allCategories.length - 4);
+      setCurrentStep(allCategories.length - 4);
     }
     setCategories([
       allCategories[currentStep],
@@ -97,7 +97,7 @@ const Home = () => {
       </div>
 
       <div className="main-container">
-        {/* {categories.map(({ title = "", controversy = "" }, i) => {
+        {categories.map(({ title = "", controversy = "" }, i) => {
         if(i+1 <= Math.floor(width/320)){
           console.log(i)
           return (
@@ -110,7 +110,7 @@ const Home = () => {
             />
           )
         }
-        })} */}
+        })}
       </div>
     </div>
   );
