@@ -1,18 +1,37 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import { LeftButton, RightButton } from "../assets";
 import { fetchData, getDesc, getIcon, getTitle } from "../utilities";
-import { FireIcon, Loader } from "../assets";
+import { FireIcon } from "../assets";
 import { isEmpty } from "lodash";
+import { VideoPlayer } from "./videoPlayer";
 
-const VideoColumn = ({ type, controversy = 0, isLast, singleRow }) => {
+const VideoColumn = ({ type, controversy = 0, isLast, singleRow, speed }) => {
   const [data, setData] = useState([]);
   const [hovered, setHovered] = useState(false);
+
+  const [isHovered, setIsHovered] = useState(false);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    let intervalId;
+    if (!isHovered) {
+      intervalId = setInterval(() => {
+        containerRef.current.scrollTo(
+          0,
+          containerRef.current.scrollTop + speed
+        );
+      }, 50);
+    }
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isHovered, speed]);
 
   useEffect(() => {
     fetchData(type, 4, setData, data);
   }, []);
 
-  const handleFetchMore = (e) => {  
+  const handleFetchMore = (e) => {
     const element = e.target;
     let lastScrollTop = 0;
     if (element.scrollTop < lastScrollTop) {
@@ -50,7 +69,14 @@ const VideoColumn = ({ type, controversy = 0, isLast, singleRow }) => {
           </span>
         </div>
       </div>
-      <div className="video-column" onScroll={handleFetchMore} id="scroll">
+      <div
+        className="video-column"
+        onScroll={handleFetchMore}
+        id="scroll"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        ref={containerRef}
+      >
         {!isEmpty(data) &&
           data.map(({ fields }, i) => {
             if (
@@ -64,39 +90,13 @@ const VideoColumn = ({ type, controversy = 0, isLast, singleRow }) => {
                   key={fields.id}
                   id="content"
                 >
-                  <video
-                    width={singleRow ? 'auto' : 300}
-                    poster={Loader}
-                    controls
-                    muted
-                    autoPlay
-                    loop
-                  >
-                    <source
-                      src={fields["video-data"][0].url}
-                      type="video/mp4"
-                    />
-                  </video>
-                  <div className="vid-text" onClick={() => alert("yay")}>
-                    <div className="video-title">
-                      ↗{" "}
-                      <span className="video-title">
-                        {fields["author"] !== undefined
-                          ? fields["author"]
-                          : "Unknown"}
-                      </span>
-                    </div>
-                    <a
-                      href={fields["video link"]}
-                      target="_blank"
-                      className="video-tags"
-                      rel="noreferrer"
-                    >
-                      {fields["title"] !== undefined
-                        ? fields["title"]
-                        : "Unknown"}
-                    </a>
-                  </div>
+                  <VideoPlayer
+                    videoUrl={fields["video-data"][0].url}
+                    linkUrl={fields["video link"]}
+                    singleRow={singleRow}
+                    author={fields["author"]}
+                    title={fields["title"]}
+                  />
                 </div>
               );
             }
